@@ -35,10 +35,19 @@ export class UserService {
     return this.users;
   }
 
-  logged(loginDetails: UserDto) {
-    const login = this.users.find(
-      (user) => user.firstName === loginDetails.firstName,
+  async logged(loginDetails: {
+    email: string;
+    password: string;
+  }): Promise<string> {
+    const hash = await bcrypt.hash(loginDetails.password, 10);
+    const login: {} = this.users.find(
+      (user) => user.email === loginDetails.email && user.password === hash,
     );
+
+    if (Object.keys(login).length) {
+      return 'Successfully login';
+    }
+    return 'Email or Password not match!';
   }
 
   async createUser(user): Promise<any> {

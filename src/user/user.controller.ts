@@ -21,8 +21,11 @@ export class UserController {
   }
 
   @Post('login')
-  loginUser(@Body() user: UserDto): string {
-    this.userService.logged(user);
-    return 'User Successfully Login !';
+  loginUser(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ): Promise<string> {
+    const res = this.userService.logged({ email, password });
+    return res;
   }
 }

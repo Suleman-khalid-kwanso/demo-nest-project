@@ -9,10 +9,21 @@ import { GlobalModule } from './global/global.module';
 import { UserModule } from './user/user.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { ConfigModule } from '@nestjs/config';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [BooksModule, TodoModule, CommonModule, GlobalModule, UserModule],
-  providers: [AppService],
+  imports: [
+    BooksModule,
+    TodoModule,
+    CommonModule,
+    GlobalModule,
+    UserModule,
+    AuthModule,
+    ConfigModule.forRoot(),
+  ],
+  providers: [AppService, AuthService],
   controllers: [AppController],
   exports: [GlobalModule],
 })

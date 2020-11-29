@@ -8,14 +8,14 @@ export type UsersArr = Array<Object>;
 
 @Injectable()
 export class UserService {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   private readonly users: UserDto[] = [
     {
       userId: 1,
       firstName: 'john',
       lastName: 'changeme',
-      email: 'example@mail.com',
+      email: 'example@mail1.com',
       password: '1234',
     },
     {
@@ -39,23 +39,31 @@ export class UserService {
     email: string;
     password: string;
   }): Promise<string> {
-    const hash = await bcrypt.hash(loginDetails.password, 10);
-    const login: {} = this.users.find(
-      (user) => user.email === loginDetails.email && user.password === hash,
-    );
 
-    if (Object.keys(login).length) {
+    const login: UserDto = this.users.find(
+      (user) => user.email === loginDetails.email,
+    );
+    const isMatch: Boolean = await bcrypt.compare(loginDetails.password, login.password);
+    if (isMatch) {
       return 'Successfully login';
     }
     return 'Email or Password not match!';
   }
 
-  async createUser(user): Promise<any> {
-    const hash = await bcrypt.hash(user.password, 10);
-    user.password = hash;
-    this.users.push(user);
-    const { password, lastName, ...result } = user;
-    const token = this.authService.generateJWT(result);
-    return token;
+  async createUser(payload): Promise<any> {
+
+    const login = this.users.find(
+      (user) => user.email === payload.email
+    );
+    if (!login) {
+      const hash = await bcrypt.hash(payload.password, 10);
+      payload.password = hash;
+      this.users.push(payload);
+      const { password, lastName, ...result } = payload;
+      const token = this.authService.generateJWT(result);
+      return token;
+    }
+    return 'Email already exist !'
+
   }
 }

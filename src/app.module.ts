@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { BooksModule } from './books/books.module';
 import { authMiddleware } from './middlewares/authMiddleware';
 import { testMiddleware } from './middlewares/testMiddleware';
@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { PhotoModule } from './photo/photo.module';
 
 @Module({
   imports: [
@@ -21,7 +22,10 @@ import { AuthModule } from './auth/auth.module';
     GlobalModule,
     UserModule,
     AuthModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    PhotoModule,
   ],
   providers: [AppService, AuthService],
   controllers: [AppController],

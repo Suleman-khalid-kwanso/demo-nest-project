@@ -34,3 +34,9 @@ dist/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/

@@ -1,69 +1,107 @@
-import { Injectable } from '@nestjs/common';
-import { AuthModule } from 'src/auth/auth.module';
-import { AuthService } from 'src/auth/auth.service';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
+import { getConnection, Repository } from 'typeorm';
+import { UserEntity } from './user.entity';
+import { UserInputDto } from './dto/user.input.dto';
+import { AuthService } from '../auth/auth.service';
 
 export type UsersArr = Array<Object>;
 
 @Injectable()
 export class UserService {
-  constructor(private authService: AuthService) { }
+  constructor(
+    @Inject('USER_REPOSITORY') private userRepository: Repository<UserEntity>,
+    private authService: AuthService,
+  ) {}
 
-  private readonly users: UserDto[] = [
-    {
-      userId: 1,
-      firstName: 'john',
-      lastName: 'changeme',
-      email: 'example@mail1.com',
-      password: '1234',
-    },
-    {
-      userId: 1,
-      firstName: 'william',
-      lastName: 'bit',
-      email: 'example@mail.com',
-      password: '1234',
-    },
-  ];
-
-  async findOne(firstName: string): Promise<Object> {
-    return this.users.find((user) => user.firstName === firstName);
+  async findOne(firstName: string): Promise<UserDto> {
+    return await this.userRepository.findOne({
+      where: { firstName },
+    });
   }
 
-  getAllUsers(): UserDto[] {
-    return this.users;
+  async getAllUsers(): Promise<UserDto[]> {
+    return await this.userRepository.find();
   }
 
   async logged(loginDetails: {
     email: string;
     password: string;
   }): Promise<string> {
-
-    const login: UserDto = this.users.find(
-      (user) => user.email === loginDetails.email,
-    );
-    const isMatch: Boolean = await bcrypt.compare(loginDetails.password, login.password);
-    if (isMatch) {
-      return 'Successfully login';
+    try {
+      const login = await this.userRepository.findOne({
+        where: { email: loginDetails.email },
+      });
+      const isMatch: Boolean = await bcrypt.compare(
+        loginDetails.password,
+        login.password,
+      );
+      if (isMatch) {
+        return 'Successfully login';
+      }
+      throw new HttpException(
+        'Email or password not match !',
+        HttpStatus.FORBIDDEN,
+      );
+    } catch (error) {
+      console.log(error);
     }
-    return 'Email or Password not match!';
   }
 
-  async createUser(payload): Promise<any> {
-
-    const login = this.users.find(
-      (user) => user.email === payload.email
-    );
-    if (!login) {
-      const hash = await bcrypt.hash(payload.password, 10);
-      payload.password = hash;
-      this.users.push(payload);
-      const { password, lastName, ...result } = payload;
-      const token = this.authService.generateJWT(result);
-      return token;
+  //need to about token or promise return type in this case?
+  async createUser(payload: UserDto): Promise<any> {
+    try {
+      const login = await this.userRepository.findOne({
+        where: { email: payload.email },
+      });
+      if (!login) {
+        const hash = await bcrypt.hash(payload.password, 10);
+        payload.password = hash;
+        const user = await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into(UserEntity)
+          .values(payload)
+          .execute();
+        payload['userId'] = user.raw[0].userId;
+        const { password, lastName, ...result } = payload;
+        const token = this.authService.generateJWT(result);
+        return token;
+      }
+      return 'Email already exist !';
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error, HttpStatus.NOT_ACCEPTABLE);
     }
-    return 'Email already exist !'
+  }
 
+  async deleteUser(userId: number): Promise<string> {
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .delete()
+        .from(UserEntity)
+        .where('userId = :userId', { userId })
+        .execute();
+      return 'Successfully deleted !';
+    } catch (error) {}
+  }
+
+  async updateUserInfo(payload: {
+    userId: number;
+    data: UserInputDto;
+  }): Promise<string> {
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .update(UserEntity)
+        .set(payload.data)
+        .where('userId = :userId', { userId: payload.userId })
+        .execute();
+      return 'Successfully updated !';
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

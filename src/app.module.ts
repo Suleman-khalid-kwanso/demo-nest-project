@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { PhotoModule } from './photo/photo.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AuthModule,
     ConfigModule.forRoot(),
+    PhotoModule,
   ],
   providers: [AppService, AuthService],
   controllers: [AppController],

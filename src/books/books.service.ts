@@ -1,5 +1,5 @@
 import { Injectable, HttpException } from '@nestjs/common';
-import { GlobalService } from 'src/global/global.service';
+import { GlobalService } from '../global/global.service';
 import { BOOKS } from '../mocks/books.mock';
 
 @Injectable()

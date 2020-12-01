@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CommonService } from 'src/common/common.service';
-import { TODO } from 'src/mocks/todo.mock';
+import { CommonService } from '../common/common.service';
+import { TODO } from '../mocks/todo.mock';
 
 @Injectable()
 export class TodoService {

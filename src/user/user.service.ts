@@ -3,7 +3,6 @@ import { UserDto } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import { getConnection, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { Stats } from 'fs';
 import { UserInputDto } from './dto/user.input.dto';
 import { AuthService } from '../auth/auth.service';
 

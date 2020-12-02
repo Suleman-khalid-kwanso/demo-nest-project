@@ -62,12 +62,14 @@ export class UserService {
         payload.password = hash;
 
         // const user = await this.userRepository.save(payload)
+
         const user = await getConnection()
           .createQueryBuilder()
           .insert()
           .into(UserEntity)
           .values(payload)
           .execute();
+
         payload['userId'] = user.raw[0].userId;
         const { password, lastName, ...result } = payload;
         const token = this.authService.generateJWT(result);
@@ -82,12 +84,7 @@ export class UserService {
 
   async deleteUser(userId: number): Promise<string> {
     try {
-      await getConnection()
-        .createQueryBuilder()
-        .delete()
-        .from(UserEntity)
-        .where('userId = :userId', { userId })
-        .execute();
+      this.userRepository.delete(userId);
       return 'Successfully deleted !';
     } catch (error) {}
   }
@@ -97,13 +94,14 @@ export class UserService {
     data: UserInputDto;
   }): Promise<string> {
     try {
-      await getConnection()
-        .createQueryBuilder()
-        .update(UserEntity)
-        .set(payload.data)
-        .where('userId = :userId', { userId: payload.userId })
-        .execute();
-      return 'Successfully updated !';
+      const user = await this.userRepository.findOne({
+        where: { userId: payload.userId },
+      });
+      if (user) {
+        this.userRepository.update(payload.userId, payload.data);
+        return 'Successfully updated !';
+      }
+      return 'User not Found !';
     } catch (error) {
       console.log(error);
     }

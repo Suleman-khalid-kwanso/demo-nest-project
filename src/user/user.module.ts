@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { AuthModule } from '../auth/auth.module';
-import { DatabaseModule } from '../dbConnection/database.module';
-import { userProvider } from './user.provider';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 
 // const mockRepository = [
@@ -25,7 +23,7 @@ import { UserEntity } from './user.entity';
 // ];
 
 @Module({
-  imports: [AuthModule, DatabaseModule, TypeOrmModule.forFeature([UserEntity])],
+  imports: [AuthModule, TypeOrmModule.forFeature([UserEntity])],
   providers: [
     UserService,
 

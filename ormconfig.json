@@ -13,6 +13,6 @@
    ],
    "cli": {
       "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration"
+      "migrationsDir": "src/migrations"
    }
 }

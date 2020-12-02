@@ -17,8 +17,9 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { PhotoModule } from './photo/photo.module';
+// import { PhotoModule } from './photo/photo.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CompanyModule } from './company/company.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -29,7 +30,8 @@ import configuration from './config/configuration';
     GlobalModule,
     UserModule,
     AuthModule,
-    PhotoModule,
+    CompanyModule,
+    // PhotoModule,
 
     // ConfigModule.forRoot({
     //   load: [configuration],

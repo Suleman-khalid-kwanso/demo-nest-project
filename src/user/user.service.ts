@@ -5,13 +5,15 @@ import { getConnection, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { UserInputDto } from './dto/user.input.dto';
 import { AuthService } from '../auth/auth.service';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export type UsersArr = Array<Object>;
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject('USER_REPOSITORY') private userRepository: Repository<UserEntity>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
     private authService: AuthService,
   ) {}
 
@@ -58,6 +60,8 @@ export class UserService {
       if (!login) {
         const hash = await bcrypt.hash(payload.password, 10);
         payload.password = hash;
+
+        // const user = await this.userRepository.save(payload)
         const user = await getConnection()
           .createQueryBuilder()
           .insert()

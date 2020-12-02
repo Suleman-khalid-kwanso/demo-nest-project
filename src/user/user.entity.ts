@@ -6,9 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-// { name: 'Users' }
-
-@Entity()
+@Entity({ name: 'Users' })
 export class UserEntity {
   @PrimaryGeneratedColumn()
   userId: number;
@@ -25,9 +23,9 @@ export class UserEntity {
   @Column()
   password: string;
 
-  // @CreateDateColumn({ type: 'timestamp' })
-  // createdAt: Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
 
-  // @UpdateDateColumn({ type: 'timestamp' })
-  // updatedAt: Date;
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }

@@ -6,6 +6,7 @@ import {
   Body,
   Query,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDTO } from './dto/create-book.dto';
@@ -27,6 +28,13 @@ export class BooksController {
   @Post()
   addBook(@Body() createBookDTO: CreateBookDTO): Promise<CreateBookDTO> {
     return this.booksService.addBook(createBookDTO);
+  }
+  @Patch(':bookId/update')
+  updateBook(
+    @Body() bookInfo: CreateBookDTO,
+    @Param('bookId') bookId: number,
+  ): Promise<string> {
+    return this.booksService.updateBookInfo({ bookInfo, bookId });
   }
 
   @Delete()

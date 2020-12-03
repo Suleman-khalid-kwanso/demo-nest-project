@@ -24,7 +24,7 @@ import configuration from './config/configuration';
     CompanyModule,
     PhotoModule,
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({ ...configuration }),
+      useFactory: () => ({ ...configuration, autoLoadEntities: true }),
     }),
   ],
   controllers: [AppController],

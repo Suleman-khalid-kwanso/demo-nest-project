@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 
@@ -27,7 +28,6 @@ export class Photo {
   @Column()
   isPublished: boolean;
 
-  @OneToOne(() => UserEntity)
-  @JoinColumn()
-  userId: UserEntity;
+  @OneToOne(() => UserEntity, (user: UserEntity) => user.photo)
+  public user: UserEntity;
 }

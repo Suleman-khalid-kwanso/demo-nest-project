@@ -1,4 +1,6 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Photo } from '../../photo/photo.entity';
+import { UserEntity } from '../user.entity';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -29,4 +31,5 @@ export class UserInputDto {
   lastName?: string;
   email: string;
   password?: string;
+  photo?: Photo;
 }

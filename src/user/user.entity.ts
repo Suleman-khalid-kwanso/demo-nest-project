@@ -2,9 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { BookEntity } from '../books/book.entity';
+import { Photo } from '../photo/photo.entity';
 
 @Entity({ name: 'Users' })
 export class UserEntity {
@@ -28,4 +34,14 @@ export class UserEntity {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @OneToOne(() => Photo, (photo) => photo.user, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  public photo: Photo;
+
+  @OneToMany(() => BookEntity, (book) => book.user)
+  books: BookEntity[];
 }

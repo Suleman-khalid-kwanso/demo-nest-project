@@ -6,6 +6,7 @@ import { UserEntity } from './user.entity';
 import { UserInputDto } from './dto/user.input.dto';
 import { AuthService } from '../auth/auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Photo } from '../photo/photo.entity';
 
 export type UsersArr = Array<Object>;
 
@@ -24,7 +25,7 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<UserDto[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({ relations: ['photo'] });
   }
 
   async logged(loginDetails: {
@@ -98,6 +99,7 @@ export class UserService {
         where: { userId: payload.userId },
       });
       if (user) {
+        payload.data.photo = payload.data.photo;
         this.userRepository.update(payload.userId, payload.data);
         return 'Successfully updated !';
       }

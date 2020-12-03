@@ -1,45 +1,57 @@
 import { Injectable, HttpException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { GlobalService } from '../global/global.service';
-import { BOOKS } from '../mocks/books.mock';
+import { BookEntity } from './book.entity';
+import { CreateBookDTO } from './dto/create-book.dto';
 
 @Injectable()
 export class BooksService {
-  constructor(private readonly globalService: GlobalService) {}
-  books = BOOKS;
+  constructor(
+    @InjectRepository(BookEntity)
+    private readonly photoRepository: Repository<BookEntity>,
+    private readonly globalService: GlobalService,
+  ) {}
 
-  getBooks(): Promise<any> {
-    return new Promise((resolve) => {
-      resolve(this.books);
-    });
+  getBooks(): Promise<CreateBookDTO[]> {
+    try {
+      return this.photoRepository.find();
+    } catch (error) {
+      throw new HttpException(error, 401);
+    }
   }
-  getBook(bookID): Promise<any> {
-    let id = Number(bookID);
-    return new Promise((resolve) => {
-      const book = this.books.find((book) => book.id === id);
-      if (!book) {
-        throw new HttpException('Book does not exist!', 404);
+  async getBook(bookId: number): Promise<CreateBookDTO> {
+    try {
+      return await this.photoRepository.findOne({
+        where: { bookId },
+      });
+    } catch (error) {
+      throw new HttpException('Book does not exist!', 404);
+    }
+  }
+
+  async addBook(book: CreateBookDTO): Promise<CreateBookDTO> {
+    try {
+      await this.photoRepository.save(book);
+      return book;
+    } catch (error) {
+      throw new HttpException(error, 400);
+    }
+  }
+
+  async deleteBook(bookId): Promise<string> {
+    try {
+      let book = await this.photoRepository.findOne({
+        where: { bookId: Number(bookId) },
+      });
+      if (book) {
+        await this.photoRepository.delete(Number(bookId));
+        return 'Successfully deleted !';
       }
-      resolve(book);
-    });
-  }
-
-  addBook(book): Promise<any> {
-    return new Promise((resolve) => {
-      this.books.push(book);
-      resolve(this.books);
-    });
-  }
-
-  deleteBook(bookID): Promise<any> {
-    let id = Number(bookID);
-    return new Promise((resolve) => {
-      let index = this.books.findIndex((book) => book.id === id);
-      if (index === -1) {
-        throw new HttpException('Book does not exist!', 404);
-      }
-      this.books.splice(1, index);
-      resolve(this.books);
-    });
+      return 'Book not found !';
+    } catch (error) {
+      throw new HttpException(error, 404);
+    }
   }
 
   getGlobal() {

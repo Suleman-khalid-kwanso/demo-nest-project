@@ -15,28 +15,23 @@ export class BooksController {
   constructor(private booksService: BooksService) {}
 
   @Get()
-  async getBooks() {
-    const books = await this.booksService.getBooks();
-    return books;
+  getBooks(): Promise<CreateBookDTO[]> {
+    return this.booksService.getBooks();
   }
 
   @Get(':bookID')
-  async getBook(@Param('bookID') bookID) {
-    const book = await this.booksService.getBook(bookID);
-    return book;
+  getBook(@Param('bookID') bookID: string): Promise<CreateBookDTO> {
+    return this.booksService.getBook(Number(bookID));
   }
 
   @Post()
-  async addBook(@Body() createBookDTO: CreateBookDTO) {
-    console.log(createBookDTO);
-    const book = await this.booksService.addBook(createBookDTO);
-    return book;
+  addBook(@Body() createBookDTO: CreateBookDTO): Promise<CreateBookDTO> {
+    return this.booksService.addBook(createBookDTO);
   }
 
   @Delete()
   async deleteBook(@Query() query) {
-    const books = await this.booksService.deleteBook(query.bookID);
-    return books;
+    return await this.booksService.deleteBook(query.bookID);
   }
 
   @Get('glob/me')

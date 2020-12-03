@@ -7,18 +7,12 @@
    "database": "demo",
    "synchronize": false,
    "logging": false,
-   "entities": [
-      "src/entity/**/*.ts"
-   ],
+   "entities": ["dist/**/*.entity{.ts,.js}"],
    "migrations": [
-      "src/migration/**/*.ts"
-   ],
-   "subscribers": [
-      "src/subscriber/**/*.ts"
+      "dist/migrations/*{.ts,.js}"
    ],
    "cli": {
       "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration",
-      "subscribersDir": "src/subscriber"
+      "migrationsDir": "src/migrations"
    }
 }

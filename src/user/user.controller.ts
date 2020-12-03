@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { UserDto } from './dto/user.dto';
-import { CreateUserDto, UserInputDto } from './dto/user.input.dto';
+import {
+  CreateUserDto,
+  LoginValidate,
+  UserInputDto,
+} from './dto/user.input.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -39,10 +43,9 @@ export class UserController {
   }
 
   @Post('login')
-  loginUser(
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ): Promise<string> {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  loginUser(@Body() loginInfo: LoginValidate): Promise<string> {
+    const { email, password } = loginInfo;
     const res = this.userService.logged({ email, password });
     return res;
   }

@@ -1,5 +1,4 @@
-import { IsEmail, IsInt, IsNotEmpty } from 'class-validator';
-import { createIncrementalCompilerHost } from 'typescript';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -14,6 +13,15 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   lastName: string;
+}
+
+export class LoginValidate {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  password: string;
 }
 
 export class UserInputDto {

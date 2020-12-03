@@ -1,4 +1,10 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { BooksModule } from './books/books.module';
 import { authMiddleware } from './middlewares/authMiddleware';
 import { testMiddleware } from './middlewares/testMiddleware';
@@ -9,10 +15,12 @@ import { GlobalModule } from './global/global.module';
 import { UserModule } from './user/user.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
-import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { PhotoModule } from './photo/photo.module';
+// import { PhotoModule } from './photo/photo.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CompanyModule } from './company/company.module';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -22,8 +30,23 @@ import { PhotoModule } from './photo/photo.module';
     GlobalModule,
     UserModule,
     AuthModule,
-    ConfigModule.forRoot(),
-    PhotoModule,
+    CompanyModule,
+    // PhotoModule,
+
+    // ConfigModule.forRoot({
+    //   load: [configuration],
+    //   isGlobal: true,
+    // }),
+
+    // TypeOrmModule.forRootAsync({
+    //   useClass: TypeOrmConfigService,
+    // }),
+
+    // TypeOrmModule.forRoot({ ...configuration }),
+
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({ ...configuration }),
+    }),
   ],
   providers: [AppService, AuthService],
   controllers: [AppController],

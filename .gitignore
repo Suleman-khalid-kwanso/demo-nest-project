@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # compiled output
 /dist
 /node_modules
@@ -35,3 +36,13 @@ build/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+=======
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+dist/
+build/
+>>>>>>> 1bf99a47ebd040e0aae80a349839030c72e7dda2

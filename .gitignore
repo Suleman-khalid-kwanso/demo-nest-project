@@ -1,42 +1,3 @@
-<<<<<<< HEAD
-# compiled output
-/dist
-/node_modules
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# OS
-.DS_Store
-
-# Tests
-/coverage
-/.nyc_output
-dist/
-build/
-/.history
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-=======
 .idea/
 .vscode/
 node_modules/
@@ -45,4 +6,3 @@ tmp/
 temp/
 dist/
 build/
->>>>>>> 1bf99a47ebd040e0aae80a349839030c72e7dda2

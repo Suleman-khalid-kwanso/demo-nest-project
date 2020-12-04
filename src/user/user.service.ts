@@ -25,7 +25,7 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<UserDto[]> {
-    return await this.userRepository.find({ relations: ['photo'] });
+    return await this.userRepository.find({ relations: ['photo', 'company'] });
   }
 
   async logged(loginDetails: {
@@ -99,7 +99,6 @@ export class UserService {
         where: { userId: payload.userId },
       });
       if (user) {
-        payload.data.photo = payload.data.photo;
         this.userRepository.update(payload.userId, payload.data);
         return 'Successfully updated !';
       }

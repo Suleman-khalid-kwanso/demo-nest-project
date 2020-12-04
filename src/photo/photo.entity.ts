@@ -5,7 +5,9 @@ import {
   OneToOne,
   JoinColumn,
   ManyToOne,
+  ManyToMany,
 } from 'typeorm';
+import { Company } from '../company/company.entity';
 import { UserEntity } from '../user/user.entity';
 
 @Entity()
@@ -30,4 +32,7 @@ export class Photo {
 
   @OneToOne(() => UserEntity, (user: UserEntity) => user.photo)
   public user: UserEntity;
+
+  @ManyToMany((type) => Company, (company) => company.photo)
+  company: Company[];
 }

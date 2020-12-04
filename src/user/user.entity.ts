@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { BookEntity } from '../books/book.entity';
+import { Company } from '../company/company.entity';
 import { Photo } from '../photo/photo.entity';
 
 @Entity({ name: 'Users' })
@@ -36,12 +37,16 @@ export class UserEntity {
   updatedAt: Date;
 
   @OneToOne(() => Photo, (photo) => photo.user, {
-    cascade: true,
-    eager: true,
+    // cascade: true,
+    // eager: true,
   })
   @JoinColumn()
   public photo: Photo;
 
   @OneToMany(() => BookEntity, (book) => book.user)
   books: BookEntity[];
+
+  @ManyToOne(() => Company, (company) => company.user)
+  @JoinColumn()
+  company: Company;
 }

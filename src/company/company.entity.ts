@@ -2,9 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Photo } from '../photo/photo.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'Companies' })
 export class Company {
@@ -22,4 +27,13 @@ export class Company {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @OneToMany(() => UserEntity, (user) => user.company)
+  user: UserEntity;
+
+  @ManyToMany((type) => Photo, (photo) => photo.company, {
+    eager: true,
+  })
+  @JoinTable()
+  photo: Photo[];
 }

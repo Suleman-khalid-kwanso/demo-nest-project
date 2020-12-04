@@ -13,6 +13,7 @@ export class CompanyService {
 
   async createCompany(payload: CompanyPayloadDto): Promise<string> {
     try {
+      payload.photo = [...payload.photo];
       await this.companyRepository.save(payload);
       return 'Company has been created successfully !';
     } catch (error) {
@@ -22,7 +23,7 @@ export class CompanyService {
 
   async getAllCompanies() {
     try {
-      return await this.companyRepository.find();
+      return await this.companyRepository.find({ relations: ['photo'] });
     } catch (error) {
       throw new HttpException(error, HttpStatus.FORBIDDEN);
     }

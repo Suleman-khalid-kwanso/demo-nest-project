@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Company } from '../../company/company.entity';
 import { Photo } from '../../photo/photo.entity';
 import { UserEntity } from '../user.entity';
 
@@ -32,4 +33,5 @@ export class UserInputDto {
   email: string;
   password?: string;
   photo?: Photo;
+  company?: Company;
 }

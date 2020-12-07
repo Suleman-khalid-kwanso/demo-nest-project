@@ -14,6 +14,7 @@ import { PhotoModule } from './photo/photo.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CompanyModule } from './company/company.module';
 import configuration from './config/configuration';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
@@ -25,6 +26,9 @@ import configuration from './config/configuration';
     PhotoModule,
     TypeOrmModule.forRootAsync({
       useFactory: () => ({ ...configuration, autoLoadEntities: true }),
+    }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
     }),
   ],
   controllers: [AppController],
